@@ -3,6 +3,9 @@ Introduction
 
 Command-line script to upload videos to Youtube using theYoutube [APIv3](https://developers.google.com/youtube/v3/). It should work on any platform (GNU/Linux, BSD, OS X, Windows, ...) that runs Python.
 
+## Fork changes
+This fork's [Dockerfile](/Dockerfile) is adjusted to work with our CI/CD pipelines.
+
 Dependencies
 ============
 
