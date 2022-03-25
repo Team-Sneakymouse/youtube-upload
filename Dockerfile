@@ -8,7 +8,7 @@ COPY . ${workdir}
 WORKDIR ${workdir}
 RUN pip install --upgrade google-api-python-client oauth2client progressbar2 && \
     python setup.py install && \
-    apk add jq
+    apk add --update coreutils jq
 
 USER python
 
