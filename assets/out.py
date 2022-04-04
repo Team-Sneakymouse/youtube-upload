@@ -2,6 +2,7 @@
 import sys
 import json
 import subprocess
+from datetime import datetime, timedelta
 def download(instream):
   payload = json.load(instream)
   source = payload['source']
@@ -21,6 +22,7 @@ def download(instream):
   params = payload["params"]
   # params = {
   #   "file": "video.mp4",
+  #   "youtube-dl.info.json": "video.info.json",
   #   "client-secrets": "client_secrets.json",
   #   "credentials-file": "credentials.json",
   #   "title": "Video Title",
@@ -32,12 +34,21 @@ def download(instream):
   #   "publish-at": "1970-01-01T00:00:00Z",
   #   "playlist": "playlist",
   # }
-  if not "file" in params:
-    raise Exception("Missing 'file' in params")
   if not "client-secrets" in params:
     params["client-secrets"] = "client_secrets.json"
   if not "credentials-file" in params:
     params["credentials-file"] = "credentials.json"
+  if "youtube-dl.info.json" in params:
+    file = open(params["youtube-dl.info.json"], "r")
+    info = json.load(file)
+
+    params["title"] = info["title"]
+    timestamp = datetime.utcfromtimestamp(info["timestamp"])
+    params["description"] = f"Streamed on {timestamp.strftime('%Y-%m-%d')}\n{info['id'].replace('v', '')}"
+    timestamp = timestamp + timedelta(hours=24)
+    params["publish-at"] = timestamp.strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    file.close()
   
   command = "youtube-upload"
   for param in params.items():
