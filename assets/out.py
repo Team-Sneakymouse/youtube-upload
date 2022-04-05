@@ -58,8 +58,8 @@ def download(instream):
   
   command += " " + params["file"]
 
-  url = subprocess.check_output(command, shell=True, text=True, stderr=subprocess.STDOUT)
-  return [{"url": url}]
+  videoId = subprocess.check_output(command, shell=True, text=True, stderr=subprocess.STDOUT)
+  return [{"url": "https://youtu.be/" + videoId.strip()}]
 
 if __name__ == "__main__":
   print(json.dumps(download(sys.stdin)))
