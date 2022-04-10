@@ -1,4 +1,5 @@
 #!/usr/local/bin/python
+import os
 import sys
 import json
 import subprocess
@@ -35,10 +36,12 @@ def download(instream):
   #   "playlist": "playlist",
   # }
   if not "client-secrets" in params:
-    params["client-secrets"] = "client_secrets.json"
+    params["client-secrets"] = os.path.join(os.getcwd(), "client_secrets.json")
   if not "credentials-file" in params:
-    params["credentials-file"] = "credentials.json"
+    params["credentials-file"] = os.path.join(os.getcwd(), "credentials.json")
   if "youtube-dl.info.json" in params:
+    if not params["file"].startswith("/"):
+      params["youtube-dl.info.json"] = os.path.join(os.getcwd(), params["youtube-dl.info.json"])
     file = open(params["youtube-dl.info.json"], "r")
     info = json.load(file)
 
@@ -56,6 +59,8 @@ def download(instream):
       continue
     command += " --" + param[0] + " \"" + param[1] + "\""
   
+  if not params["file"].startswith("/"):
+    params["file"] = os.path.join(os.getcwd(), params["file"])
   command += " " + params["file"]
 
   videoId = subprocess.check_output(command, shell=True, text=True, stderr=subprocess.STDOUT)
